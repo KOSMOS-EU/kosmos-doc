@@ -13,5 +13,5 @@ mkdir -p "$OUT"
 # mkdocs-material installieren (Image hat python3 + pip, alpine)
 pip install --quiet --no-cache-dir --break-system-packages mkdocs-material
 
-mkdocs build --strict -d "$DIST_DIR"
+mkdocs build --strict -d "$OUT"
 echo "[build] mkdocs ok -> $DIST_DIR ($(find "$DIST_DIR" -type f | wc -l) Dateien)"
