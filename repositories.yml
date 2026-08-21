@@ -1,0 +1,108 @@
+# Repositories der OpenCloud KOSMOS Edition
+#
+# Die Edition besteht aus Komponenten mit separaten Repositories.
+# Diese Doku beschreibt sie gemeinsam — die Umsetzung lebt in den
+# jeweiligen Repos.
+
+repositories:
+
+  # ── Plattform (OpenCloud-Forks, kosmos-Branch) ──
+
+  - name: opencloud
+    url: https://gitlab.opencode.de/kosmos/opencloud
+    description: >-
+      OpenCloud Server (kosmos-Branch). Storage, Spaces, Suche
+      (Bleve + Qdrant), JobEngine.
+    type: platform
+    component: OpenCloud
+
+  - name: opencloud_reva
+    url: https://gitlab.opencode.de/kosmos/opencloud_reva
+    description: >-
+      Reva (kosmos-Branch). WebDAV/CS3-Gateway. Wird nie einzeln
+      gebaut (Teil des OpenCloud-Builds).
+    type: platform
+    component: OpenCloud
+
+  - name: opencloud_web
+    url: https://gitlab.opencode.de/kosmos/opencloud_web
+    description: >-
+      Web UI (kosmos-Branch). Wird auf brandis.eu separat deployed,
+      auf den Kunden-Instanzen im Image eingebettet.
+    type: platform
+    component: OpenCloud
+
+  # ── Dienste ──
+
+  - name: open_taki
+    url: https://gitlab.opencode.de/kosmos/open_taki
+    description: >-
+      Dokumenten-Engine. Tika-kompatibler Auswertungsdienst mit
+      LLM-Vision-OCR, DocMeta-Extraktion, Embedding und
+      Dokumenten-Chat. Go-Binary, AGPL-3.0.
+    type: service
+    component: Dokumente
+
+  - name: microllm
+    url: https://codeberg.org/Gemini-Foundation/microllm
+    description: >-
+      LLM-Routing-Proxy mit Alias-Gruppen (Loadbalancing,
+      Health-Checks, Hot-Reload). Gemini Stiftung, MIT.
+    type: service
+    component: AI-Infrastruktur
+
+  - name: opencloud_intranet
+    url: https://gitlab.opencode.de/kosmos/opencloud_intranet
+    description: >-
+      Intranet-Portal. Serviert OpenCloud-Public-Links als
+      gelayte Sites mit OIDC-Auth und Gruppenbeschränkung.
+    type: service
+    component: Intranet
+
+  - name: opencloud_classes
+    url: https://gitlab.opencode.de/kosmos/opencloud_classes
+    description: >-
+      Classes Service (Schul-/Kursräume) + Web-Extension.
+    type: service
+    component: Classes
+
+  - name: openworks
+    url: https://gitlab.opencode.de/kosmos/openworks
+    description: >-
+      JobEngine-Worker + Web-Extension. Typisierte Jobs für die
+      Worker-Matrix (pdfa, ai-tax, build, cloud, …).
+    type: service
+    component: Worker
+
+  # ── Extensions (kosmos-eu) ──
+
+  - name: opencloud_folderviews
+    url: https://gitlab.opencode.de/kosmos/opencloud_folderviews
+    description: "FolderViews Web-Extension."
+    type: extension
+    component: Web UI
+
+  - name: opencloud_htmlviewer
+    url: https://gitlab.opencode.de/kosmos/opencloud_htmlviewer
+    description: "HTML-Viewer Web-Extension."
+    type: extension
+    component: Web UI
+
+  # ── Betrieb ──
+
+  - name: kosmos-nuhost-deploy
+    url: https://gitlab.opencode.de/kosmos/kosmos-nuhost-deploy
+    description: >-
+      Rollout- und Build-Orchestrierung: deploy-opencloud.sh
+      (Kunden-Instanzen), job.py (JobEngine-Builds), Compose-Templates
+      der Edition.
+    type: tooling
+    component: Betrieb
+
+  - name: nuhost6
+    url: https://github.com/flash7777/nuhost6
+    description: >-
+      Container-Host-Management für Debian 13 mit Podman-Quadlet.
+      Das Dach-Kommando `nu` (compose, targets, snapshots, pmx).
+    type: tooling
+    component: Betrieb

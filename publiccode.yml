@@ -1,0 +1,39 @@
+# See https://yml.publiccode.tools/schema.core.html#top-level-keys-and-sections
+publiccodeYmlVersion: "0.4"
+name: "KOSMOS — Gesamtdokumentation"
+applicationSuite: "KOSMOS"
+url: "https://gitlab.opencode.de/kosmos/kosmos-doc"
+softwareVersion: "1.0.0"
+releaseDate: "2026-08-20"
+platforms:
+  - "web"
+  - "cloud"
+categories:
+  - "information-and-communication-technology"
+  - "data"
+developmentStatus: "active"
+softwareType: "standalone/other"
+openSourceDefinitionCompliant: true
+
+# See https://yml.publiccode.tools/schema.core.html#section-description
+description:
+  de:
+    genericName: "KOSMOS-Dokumentation"
+    shortDescription: "Gesamtdokumentation der KOSMOS Edition (Open Core) — des zentralen, revisionssicheren und geschützten Datenorts, der digitale Prozesse vertikal und horizontal skaliert."
+    detailedDescription: |
+      Diese Dokumentation beschreibt die KOSMOS Edition (Open Core)
+      als Ganzes: das KOSMOS-Universum (Revisionssicherheit, Schutz,
+      Skalierung), die Architektur (Pod, Netzwerk, Deployment,
+      Updates), alle Dienste der Edition (Open Core, Suche, open_taki,
+      microllm, AI-Stack, Collaboration, Classes, Intranet, Kalender,
+      SearXNG, Scanner, Worker, optionale Dienste) sowie den Betrieb
+      (Monitoring, Backup, Troubleshooting).
+
+      Die Edition wird von der Innovationskommune Stadt Brandis im
+      Rahmen des Parthlandverbunds (acht Kommunen des Landkreises
+      Leipzig) als praxisgeführtes Vortriebsprojekt vorangetrieben:
+      Die Anforderungen entstehen im laufenden Verwaltungsbetrieb,
+      nicht in einer Anforderungsanalyse.
+
+    legalNotice:
+      de: "CC-BY-SA-4.0"
