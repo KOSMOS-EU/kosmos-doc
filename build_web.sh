@@ -14,4 +14,4 @@ mkdir -p "$OUT"
 pip install --quiet --no-cache-dir --break-system-packages mkdocs-material
 
 mkdocs build --strict -d "$OUT"
-echo "[build] mkdocs ok -> $DIST_DIR ($(find "$DIST_DIR" -type f | wc -l) Dateien)"
+echo "[build] mkdocs ok -> $OUT ($(find "$OUT" -type f | wc -l) Dateien)"
