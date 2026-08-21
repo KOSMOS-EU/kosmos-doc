@@ -13,7 +13,8 @@
 #   HOST=cloud.brandis.eu
 #   POD=cloud_brandis
 #   KOSMOS_SITE=<domain des KOSMOS-Sites in portal-sites.yaml>
-#   WEBDAV_BASE=https://cloud.brandis.eu/public-webdav
+#   WEBDAV_BASE=https://cloud.brandis.eu/remote.php/dav/public-files
+#   DOC_DIR=doc                (Subordner — Root bleibt unangetastet!)
 #   WEBDAV_USER= / WEBDAV_TOKEN=   (nur wenn der Link Passwort schuetzt)
 set -euo pipefail
 
@@ -23,7 +24,8 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 HOST="${HOST:?HOST in DIST}"
 POD="${POD:?POD in DIST}"
 SITE="${KOSMOS_SITE:?KOSMOS_SITE in DIST}"
-WEBDAV_BASE="${WEBDAV_BASE:-https://${HOST}/public-webdav}"
+WEBDAV_BASE="${WEBDAV_BASE:-https://${HOST}/remote.php/dav/public-files}"
+DOC_DIR="${DOC_DIR:-}"
 SITES_YAML="/nu/container/${POD}/compose/portal-sites.yaml"
 
 # ── 1. public_link aus der Intranet-Config holen ──
@@ -33,7 +35,14 @@ LINK=$(ssh "root@${HOST}" awk -v dom="\"${SITE}\"" '
     f && /public_link:/ { gsub(/[^A-Za-z0-9]/, "", $2); print $2; exit }
 ' "$SITES_YAML")
 : "${LINK:?kein public_link fuer Site ${SITE} in ${SITES_YAML}}"
-DAV="${WEBDAV_BASE}/${LINK}/"
+if [ -n "$DOC_DIR" ]; then
+    DAV="${WEBDAV_BASE}/${LINK}/${DOC_DIR}/"
+else
+    DAV="${WEBDAV_BASE}/${LINK}/"
+fi
+# Pfad-Prefix der PROPFIND-Href (zum Zuschneiden, Punkte escaped)
+DAV_PATH="/${DAV#*://*/}"
+DAV_PATH_RE=$(printf '%s' "$DAV_PATH" | sed 's/\./\\./g')
 echo "[resolve] WebDAV: ${DAV}"
 
 AUTH=()
@@ -70,18 +79,21 @@ else
 fi
 echo "[src] $(find "$SRC" -type f | wc -l) Dateien"
 
-# ── 3. Alte Dateien loeschen (PROPFIND + DELETE) ──
+# ── 3. Alte Dateien im DOC_DIR loeschen (PROPFIND + DELETE) ──
+# Nur den Subordner — das Root des Public-Link bleibt unangetastet.
+# || true: erster Lauf, Ordner existiert noch nicht (404)
 OLD=$(curl -sf "${AUTH[@]}" -X PROPFIND -H "Depth: infinity" -H "Content-Type: application/xml" "$DAV" \
     -d '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:resource/></d:prop></d:propfind>' \
     | grep -oE '<d:href>[^<]+</d:href>' | sed -E 's|</?d:href>||g' \
-    | python3 -c "import sys, urllib.parse; [print(urllib.parse.unquote(l.strip())) for l in sys.stdin if l.strip().strip('/')]")
+    | python3 -c "import sys, urllib.parse; [print(urllib.parse.unquote(l.strip())) for l in sys.stdin if l.strip().strip('/')]" \
+    | sed -E "s|^${DAV_PATH_RE}||" || true)
 COUNT=0
 while IFS= read -r p; do
     [ -z "$p" ] && continue
-    curl -sf -o /dev/null "${AUTH[@]}" -X DELETE "${DAV}${p}" || true
+    curl -sf -o /dev/null "${AUTH[@]}" -X DELETE "${DAV}${p#/}" || true
     COUNT=$((COUNT+1))
 done <<< "$OLD"
-echo "[purge] ${COUNT} alte Dateien geloescht"
+echo "[purge] ${COUNT} alte Dateien in ${DAV} geloescht"
 
 # ── 4. Highladen (PUT; OpenCloud legt fehlende Ordner an) ──
 UPLOADED=0

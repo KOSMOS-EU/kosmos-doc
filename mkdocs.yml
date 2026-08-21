@@ -3,7 +3,10 @@ site_description: >-
   Dokumentation der KOSMOS Edition (Open Core): der zentrale,
   revisionssichere und geschützte Datenort, der digitale Prozesse
   vertikal und horizontal skaliert.
-site_url: https://kosmos.technology/
+# Doku laeuft im KOSMOS-Space als Subsite unter /doc/
+# (Wurzel = bestehende Projektseite — bleibt angefasst!).
+# Der Pfad /doc/ in der site_url bestimmt base_path fuer alle Links.
+site_url: https://kosmos.technology/doc/
 repo_url: https://github.com/KOSMOS-EU/kosmos-doc
 repo_name: KOSMOS-EU/kosmos-doc
 edit_uri: edit/main/docs/
